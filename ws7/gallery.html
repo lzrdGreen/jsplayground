@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>Gallery</title>
+        <style>
+            h1 {
+                background-color: #EBC922;
+                text-align: center;
+            }
+            p {
+                color: blue;
+                font-size: 20px;
+            }
+            header {
+                background-color: black;
+                padding: 20px;
+            }
+            nav li a {
+                text-decoration: none;
+                color: #C2A61C;
+                padding: 10px;
+                font-size: 20px;
+            }
+            nav ul {
+                list-style: none;
+                /* a flex container allows its items to be arranged horizontally */
+                display: flex; /* This is the key change to display items horizontally */
+                justify-content: space-between;
+            }
+            body{
+                margin: 2%;
+                border: 1px solid black;
+                background-color: #b3b3b3;
+            }
+            #image{
+                line-height:650px;
+                    width: 575px;
+                height: 650px;
+                    border:5px solid black;
+                    margin:0 auto;
+                background-color: #cceecc;
+                background-image: url('');
+                background-repeat: no-repeat;
+                color:#FFFFFF;
+                text-align: center;
+                background-size: 100%;
+                margin-bottom:25px;
+                font-size: 150%;
+            }
+            .preview{
+                width:10%;
+                margin-left:5%;
+                border: 10px solid black;
+            }
+            img{
+                    width:95%;
+            }
+
+          /* Position the image container (needed to position the left and right arrows) */
+          .container {
+            position: relative;
+            max-width: 50%;
+            margin: 0 auto; /* center the container */
+          }
+
+          /* Hide the images by default */
+          .mySlides {
+            display: none;
+          }
+
+          /* Add a pointer when hovering over the thumbnail images */
+          .cursor {
+            cursor: pointer;
+          }
+
+          /* Next & previous buttons */
+          .prev,
+          .next {
+            cursor: pointer;
+            position: absolute;
+            top: 40%;
+            width: auto;
+            padding: 16px;
+            margin-top: -50px;
+            color: white;
+            font-weight: bold;
+            font-size: 20px;
+            border-radius: 0 3px 3px 0;
+            user-select: none;
+            -webkit-user-select: none;
+          }
+
+          /* Position the "next button" to the right */
+          .next {
+            right: 0;
+            border-radius: 3px 0 0 3px;
+          }
+
+          .prev {
+            left: 0;
+            border-radius: 3px 0 0 3px;
+          }
+
+          /* On hover, add a black background color with a little bit see-through */
+          .prev:hover,
+          .next:hover {
+            background-color: rgba(0, 0, 0, 0.8);
+          }
+
+          /* Number text (1/3 etc) */
+          .numbertext {
+            color: #f2f2f2;
+            font-size: 12px;
+            padding: 8px 12px;
+            position: absolute;
+            top: 0;
+          }
+
+          /* Container for image text */
+          .caption-container {
+            text-align: center;
+            background-color: #222;
+            padding: 2px 16px;
+            color: white;
+          }
+
+          .row:after {
+            content: "";
+            display: table;
+            clear: both;
+          }
+
+          /* Six columns side by side */
+          .column {
+            float: left;
+            width: 16.66%;
+          }
+
+          /* Add a transparency effect for thumnbail images */
+          .demo {
+            opacity: 0.75;
+          }
+
+          .active,
+          .demo:hover {
+            opacity: 1;
+          }
+        </style>
+        <script src="js/script.js" defer></script>
+    </head>
+    <body onload="pickImages()">
+      <header>
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="orwell.html">DataVis</a></li>
+                <li><a href="gallery.html">Gallery</a></li> 
+                <li><a href="game.html">Game</a></li>
+                <!--<li><a href="reactPlGround.html">React</a></li>-->
+            </ul>
+        </nav>        
+    </header>
+        <h1>Gallery</h1>
+        <p>I used a collection of AI generated images to populate the two galleries randomly. If you wish to see another variant of image selection for  each gallery, just reload this page, please.</p>
+        <div id = "image">
+            Hover over an image below to display here.
+        </div>
+        <img id="im1" class = "preview" alt = "Waiting for an image" src = "" onmouseover = "upDate(this)" onmouseout = "unDo()">
+        <img id="im2" class = "preview" alt = "Waiting for an image" src = "" onmouseover = "upDate(this)" onmouseout = "unDo()">
+        <img id="im3" class = "preview" alt = "Waiting for an image" src = "" onmouseover = "upDate(this)" onmouseout = "unDo()">
+        <img id="im4" class = "preview" alt = "Waiting for an image" src = "" onmouseover = "upDate(this)" onmouseout = "unDo()">
+        <img id="im5" class = "preview" alt = "Waiting for an image" src = "" onmouseover = "upDate(this)" onmouseout = "unDo()">
+        
+   
+    <h1>Slideshow Gallery</h1>    
+        <!--
+        The idea borrowed from: https://www.w3schools.com/howto/howto_js_slideshow_gallery.asp
+        However, their implementation is redundant: they provide image source and alt text twice. Got rid of that redundancy
+        -->
+        <div class="container">
+          <div class="mySlides"></div>
+            <div class="numbertext" id="numbertext"></div>
+            <img id="slideImage" style="width:100%">
+          
+
+          <a class="prev" onclick="plusSlides(-1)">❮</a>
+          <a class="next" onclick="plusSlides(1)">❯</a>
+        </div>
+
+        <div class="caption-container">
+            <p id="caption"></p>
+        </div>
+
+          <!-- Thumbnail container -->
+        <div class="row" id="thumbnailContainer">
+            <!-- Thumbnails are inserted here dynamically -->
+        </div>
+         
+    </body>
+</html>

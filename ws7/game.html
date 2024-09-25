@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <style>
+        main {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-family: Arial, sans-serif;
+        }
+    
+        #game-board {
+            display: grid;
+            grid-template-columns: repeat(5, 50px);
+            grid-template-rows: repeat(5, 50px);
+            gap: 2px;
+        }
+    
+        .cell {
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    
+        .hexagon {
+            width: 40px;
+            height: 40px;
+            clip-path: polygon(25% 6.7%, 75% 6.7%, 100% 50%, 75% 93.3%, 25% 93.3%, 0% 50%);
+        }
+    
+        
+        .blue { background-color: blue; }
+        .brown { background-color: brown; }
+        .yellow { background-color: yellow; }
+        
+    
+        .selected {
+            border: 2px solid magenta;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="orwell.html">DataVis</a></li>
+                <li><a href="gallery.html">Gallery</a></li> 
+                <li><a href="game.html">Game</a></li>
+                <!--<li><a href="reactPlGround.html">React</a></li>-->
+            </ul>
+        </nav>        
+    </header>
+    <h1>The game</h1>
+    <p>Bejeweled is a popular puzzle game where the player is presented with a grid of coloured gems. The goal is to match three or more gems of the same colour in a row or column. When a match is made, those gems are removed from the grid, and new gems appear in the empty spaces. If 3+ in a row or column appear by pure chance, they are removed automatically which is reflected in the Score (it starts from 0, of course).</p>
+    <p>You can swap adjacent gems by clicking on them. The swapped gems need to be next to each other along the row, the column or a diagonal. The 3+ in line refers to columns and rows only. Enjoy the Game!</p>
+    <div id="game-board"></div>
+    <div id="score" style="font-size: 40px;">Score: 0</div>
+    <div id="info"></div>
+    <script>
+        const colours = ['blue', 'brown', 'yellow'];
+        let score = 0;
+        const numCol = 5;
+        const numRows = 5;
+        let board = [];
+        var repr = [];
+        
+
+        function getRandomNumber() {
+            return Math.floor(Math.random() * (colours.length));
+        }
+
+        // Populate repr object with random numbers
+        for (let i = 0; i < numRows; i++) {
+            repr.push([]);
+        }
+        for (let i = 0; i < numRows; i++) {
+            for (let j = 0; j < numCol; j++) {
+            repr[i][j] = getRandomNumber();
+            }
+        }
+
+        function createBoard() {
+            const gameBoard = document.getElementById('game-board');
+            gameBoard.innerHTML = '';
+            for (let i = 0; i < numRows; i++) {
+                board[i] = [];
+                for (let j = 0; j < numCol; j++) {
+                    const cell = document.createElement('div');
+                    cell.classList.add('cell');
+                    
+                    const hexagon = document.createElement('div');                    
+                    hexagon.classList.add('hexagon', colours[repr[i][j]]);
+                    
+                    cell.appendChild(hexagon);
+                    gameBoard.appendChild(cell);
+                    
+                    // Store the hexagon in the board, not the cell
+                    board[i][j] = { color: colours[repr[i][j]], element: hexagon};
+
+                    // Add click event listener to the cell
+                    cell.addEventListener('click', () => handleCellClick(i, j));               
+                }
+            }
+        }      
+                   
+        // Start game
+        createBoard();
+        findMatches();
+
+        function isNeighbour2(i1,j1, i2,j2) {
+            const dx = Math.abs(i1 - i2);
+            const dy = Math.abs(j1 - j2);
+            return (dx <= 1 && dy <= 1) && !(dx === 0 && dy === 0);
+        }
+
+
+        let selectedCell = null;
+        let flag = false;
+
+        const infoElement = document.getElementById('info');
+
+        function handleCellClick(i, j) {
+            if (flag) {
+            // Second cell selected
+            if (isNeighbour2(i, j, selectedCell.i, selectedCell.j)) {
+                // Cells are adjacent                
+                //infoElement.textContent = `You've chosen 2 cells with coordinates (${selectedCell.i}, ${selectedCell.j}) and (${i}, ${j})`;
+                infoElement.textContent = "";
+                swapGems(selectedCell.i, selectedCell.j, i, j);                
+                createBoard();
+                findMatches();
+            } else {
+                // Cells are not adjacent
+                infoElement.textContent = "Cells must be next to each other";
+            }
+            flag = false;
+            } else {
+            // First cell selected
+            selectedCell = { i, j };
+            flag = true;
+            infoElement.textContent = "First cell selected: (" + i + ", " + j + ")";
+            }
+        }
+
+        function swapGems(i1,j1, i2, j2) {
+            let tempor = repr[i1][j1];            
+            repr[i1][j1] = repr[i2][j2];
+            repr[i2][j2] = tempor;
+        }
+/*
+        function findMatches() {
+            // Initialise the mask array
+            const mask = [];
+            for (let i = 0; i < numRows; i++) {
+                mask.push([]);
+                for (let j = 0; j < numCol; j++) {
+                mask[i][j] = 0;
+                }
+            }
+
+            // Check for horizontal matches
+            for (let i = 0; i < numRows; i++) {
+                let count = 1;
+                for (let j = 1; j < numCol; j++) {
+                if (repr[i][j] === repr[i][j - 1]) {
+                    count++;
+                    if (count >= 3) {
+                    for (let k = j - count + 1; k <= j; k++) {
+                        mask[i][k] = 1;
+                    }
+                    }
+                } else {
+                    count = 1;
+                }
+                }
+            }
+
+            // Check for vertical matches
+            for (let j = 0; j < numCol; j++) {
+                let count = 1;
+                for (let i = 1; i < numRows; i++) {
+                if (repr[i][j] === repr[i - 1][j]) {
+                    count++;
+                    if (count >= 3) {
+                    for (let k = i - count + 1; k <= i; k++) {
+                        mask[k][j] = 1;
+                    }
+                    }
+                } else {
+                    count = 1;
+                }
+                }
+            }            
+            // Calculate the total score
+            let totalScore = 0;
+            for (let i = 0; i < numRows; i++) {
+                for (let j = 0; j < numCol; j++) {
+                if (mask[i][j] === 1) {
+                    totalScore++;
+                }
+                }
+            }
+
+            // Update the score element
+            const scoreElement = document.getElementById('score');
+            score = score + totalScore; // Add the new score to the current score
+            scoreElement.textContent = `Score: ${score}`;
+            }
+*/
+
+
+function findMatches() {
+    // Initialise the mask array
+    const mask = [];
+    for (let i = 0; i < numRows; i++) {
+        mask.push([]);
+        for (let j = 0; j < numCol; j++) {
+            mask[i][j] = 0;
+        }
+    }
+
+    // Check for horizontal matches
+    for (let i = 0; i < numRows; i++) {
+        let count = 1;
+        for (let j = 1; j < numCol; j++) {
+            if (repr[i][j] === repr[i][j - 1]) {
+                count++;
+                if (count >= 3) {
+                    for (let k = j - count + 1; k <= j; k++) {
+                        mask[i][k] = 1;
+                    }
+                }
+            } else {
+                count = 1;
+            }
+        }
+    }
+
+    // Check for vertical matches
+    for (let j = 0; j < numCol; j++) {
+        let count = 1;
+        for (let i = 1; i < numRows; i++) {
+            if (repr[i][j] === repr[i - 1][j]) {
+                count++;
+                if (count >= 3) {
+                    for (let k = i - count + 1; k <= i; k++) {
+                        mask[k][j] = 1;
+                    }
+                }
+            } else {
+                count = 1;
+            }
+        }
+    }
+
+    // Calculate the total score
+    let totalScore = 0;
+    for (let i = 0; i < numRows; i++) {
+        for (let j = 0; j < numCol; j++) {
+            if (mask[i][j] === 1) {
+                totalScore++;
+            }
+        }
+    }
+
+    if (totalScore > 0) {
+        // Delay for animation before removing gems
+        setTimeout(() => {
+            removeMatches(mask);
+        }, 500); // Adjust delay as necessary for the animation
+    }
+
+    // Update the score element
+    const scoreElement = document.getElementById('score');
+    score = score + totalScore; // Add the new score to the current score
+    scoreElement.textContent = `Score: ${score}`;
+}
+
+function removeMatches(mask) {
+    // Animate gem removal by fading them out
+    for (let i = 0; i < numRows; i++) {
+        for (let j = 0; j < numCol; j++) {
+            if (mask[i][j] === 1) {
+                board[i][j].element.style.transition = 'opacity 0.5s';
+                board[i][j].element.style.opacity = 0;
+            }
+        }
+    }
+
+    // After the fade-out effect, clear the matched gems and refill the board
+    setTimeout(() => {
+        let newGemsGenerated = false;
+        for (let i = 0; i < numRows; i++) {
+            for (let j = 0; j < numCol; j++) {
+                if (mask[i][j] === 1) {
+                    repr[i][j] = getRandomNumber(); // Refill with new random gem
+                    newGemsGenerated = true;
+                }
+            }
+        }
+
+        createBoard(); // Rebuild the board after updating the repr array
+
+        // Check for any new matches after refill
+        if (newGemsGenerated) {
+            setTimeout(() => {
+                findMatches(); // Recursively find and remove new matches
+            }, 500); // Add a small delay to allow the player to see the new gems before checking again
+        }
+    }, 500); // Match the delay to the transition time
+}
+
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DataVis</title>
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <link rel="stylesheet" href="css/styles.css">
+  <style>
+    body {
+      font-family: sans-serif;
+    }
+    svg {
+            border: 2px dotted gray;
+        }
+    .axis path, .axis line {
+      fill: none;
+      stroke: #000;
+      shape-rendering: crispEdges;
+    }
+    .hover-line {
+      stroke: white;
+      stroke-width: 2;
+      stroke-dasharray: 5 5;
+      opacity: 0;
+    }
+    .tooltip {
+      background-color: rgba(255, 255, 255, 0.7);
+      padding: 5px;
+      border-radius: 5px;
+      position: absolute;
+      pointer-events: none;
+      opacity: 0;
+    }
+    .bar {
+      fill: steelblue;
+    }
+    .conviction {
+      fill: pink;
+    }
+    .reeducation {
+      fill: yellow;
+    }
+    .legend {
+      font-size: 12px;
+    }
+    .btn {
+      margin-bottom: 20px;
+      padding: 10px 20px;
+      cursor: pointer;
+    }
+
+    table {
+      font-family: Tahoma, sans-serif;
+      border-collapse: collapse;
+      width: 60%;
+    }
+
+    td, th {
+      border: 1px solid #dddddd;
+      text-align: left;
+      padding: 12px;
+    }
+
+    tr:nth-child(even) {
+      background-color: #dddddd;
+    }
+  </style>
+  
+</head>
+<body>
+  <header>
+    <nav>
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="orwell.html">DataVis</a></li>
+            <li><a href="gallery.html">Gallery</a></li> 
+            <li><a href="game.html">Game</a></li>
+            <!--<li><a href="reactPlGround.html">React</a></li>-->
+        </ul>
+    </nav>        
+  </header>
+    <h1>1984 by Orwell</h1>
+    <p>Oceania, in George Orwell's 1984, is one of three superstates (the others being Eurasia and Eastasia) and serves as the novel's primary setting. It is a totalitarian regime led by the Party, headed by Big Brother, where the government controls every aspect of life, from personal thoughts to historical records.</p>
+    <p>Key features of Oceania include:</p>
+    <ul style="font-size: 20px;">
+        <li>Ingsoc (English Socialism): The governing ideology that emphasizes complete power over society, maintained through surveillance, propaganda, and suppression of dissent.</li>
+        <li>Doublethink: The practice of accepting two contradictory beliefs at the same time, helping the Party to manipulate truth and control thought.</li>
+        <li>The Party Structure: Divided into the Inner Party (elite ruling class), Outer Party (bureaucrats), and the Proles (working class). The Inner Party wields power, while the Proles are largely ignored as they’re seen as powerless.</li>
+        <li>Ministries: The government is organized into four ministries that enforce Party control—Truth (propaganda), Love (torture and repression), Peace (war), and Plenty (economic control).</li>
+    </ul>
+    <p>Oceania constantly rewrites history to align with the Party's current narrative, fostering a climate of fear and manipulation. The statistical data is very scarce, mostly undisclosed. But the charts below provide a peek into the life of the 1984 world.</p>
+
+    <h1>Thoughtcrimes</h1>
+    <p>(number of arrests and convictions for thoughtcrime over the period of 1984-2024, in thousands.)</p>
+    <button class="btn" id="toggle-order">Switch to Max-to-Min</button>
+    <div id="chart1"></div>
+    <p>Most arrested get convicted. Some people are sent for reeducation, it's not clear which is worse. You can hover over the plots to see how the number of arrest is split into the two categories.</p>
+    <p>The plot above provides a clear picture of the dynamics of punishment in Oceania in the last 40 years. The general trend has changed around 2020 probably becuase of introduction of the new AI based techniques both for monitoring of potential outlaws and their reeducation which now combines electrocution with reinforcement learning (RL). Around 2000 the Inner party faced significant increase of arrest which caught them unprepared. For that reason they had to reallocate their resouces for building new jails. For you convenience, the data is presented as a table (please see below).</p>
+    <h2>Punishment for Thoughtcrimes</h2>
+    <p>(in thousands)</p>
+    <table>
+      <tr>
+        <th>Year</th>
+        <th>Arrests</th>
+        <th>Convictions</th>
+        <th>Reeducation</th>
+      </tr>
+      <tr>
+        <td>1984</td>
+        <td>150</td>
+        <td>120</td>
+        <td>30</td>
+      </tr>
+      <tr>
+        <td>1989</td>
+        <td>200</td>
+        <td>160</td>
+        <td>40</td>
+      </tr>
+      <tr>
+        <td>1994</td>
+        <td>250</td>
+        <td>190</td>
+        <td>60</td>
+      </tr>
+      <tr>
+        <td>1999</td>
+        <td>350</td>
+        <td>230</td>
+        <td>120</td>
+      </tr>
+      <tr>
+        <td>2004</td>
+        <td>300</td>
+        <td>290</td>
+        <td>10</td>
+      </tr>
+      <tr>
+        <td>2009</td>
+        <td>400</td>
+        <td>310</td>
+        <td>90</td>
+      </tr>
+      <tr>
+        <td>2014</td>
+        <td>470</td>
+        <td>350</td>
+        <td>120</td>
+      </tr>
+      <tr>
+        <td>2019</td>
+        <td>620</td>
+        <td>490</td>
+        <td>130</td>
+      </tr>
+      <tr>
+        <td>2024</td>
+        <td>550</td>
+        <td>410</td>
+        <td>140</td>
+      </tr>
+    </table>
+
+    <br>
+    <h1>Economic Inequality in Oceania</h1>
+    <p>This chart visualizes economic inequality between the classes, with the Inner Party gaining more resources - food, housing - over time (1984-2024), while the Proles get fewer. (Hover your mouse over the plot to see the exact values.)</p>
+    <div id="chart2"></div>
+    <div class="tooltip" id="tooltip"></div>
+    <p><em>Note: the made-up data were used here but the only purpose of this page is to demonstrate the potential of interactivity in data visualisation.</em></p>
+
+    <script>
+        let data1 = [
+          {year: "1984", arrests: 150, convictions: 120},
+          {year: "1989", arrests: 200, convictions: 160},
+          {year: "1994", arrests: 250, convictions: 190},
+          {year: "1999", arrests: 350, convictions: 230},
+          {year: "2004", arrests: 300, convictions: 290},
+          {year: "2009", arrests: 400, convictions: 310},
+          {year: "2014", arrests: 470, convictions: 350},
+          {year: "2019", arrests: 620, convictions: 490},
+          {year: "2024", arrests: 550, convictions: 410},
+        ];
+    
+        // Calculate reeducation (arrests - convictions)
+        data1.forEach(d => {
+          d.reeducation = d.arrests - d.convictions;
+        });
+    
+        // Save a copy of chronological order
+        const chronologicalData = [...data1];
+    
+        const margin1 = {top: 20, right: 30, bottom: 60, left: 100},
+              width1 = 750 - margin1.left - margin1.right, // +150px
+              height1 = 400 - margin1.top - margin1.bottom;
+    
+        const svg1 = d3.select("#chart1").append("svg")
+          .attr("width", width1 + margin1.left + margin1.right)
+          .attr("height", height1 + margin1.top + margin1.bottom)
+          .append("g")
+          .attr("transform", `translate(${margin1.left},${margin1.top})`);
+    
+        const y1 = d3.scaleBand()
+          .domain(data1.map(d => d.year))
+          .range([0, height1])
+          .padding(0.2);
+    
+        const x1 = d3.scaleLinear()
+          .domain([0, d3.max(data1, d => d.arrests)])
+          .range([0, width1-150]); // -150px
+    
+        // X-axis
+        svg1.append("g")
+          .attr("transform", `translate(0,${height1})`)
+          .call(d3.axisBottom(x1));
+    
+        // Add x-axis label
+        svg1.append("text")
+          .attr("x", width1 / 2)
+          .attr("y", height1 + margin1.bottom - 10)
+          .attr("text-anchor", "middle")
+          .text("Number of Arrests");
+    
+        // Y-axis
+        svg1.append("g")
+          .attr("class", "y axis")
+          .call(d3.axisLeft(y1));    
+    
+        // Add y-axis label
+        svg1.append("text")
+          .attr("transform", "rotate(-90)")
+          .attr("x", -height1 / 2)
+          .attr("y", -margin1.left + 20)
+          .attr("text-anchor", "middle")
+          .text("Years (1984 - 2024)");
+    
+    svg1.selectAll(".conviction")
+      .data(data1)
+      .enter().append("rect")
+      .attr("class", "conviction")
+      .attr("y", d => y1(d.year))
+      .attr("x", 0)  // Start from the left
+      .attr("height", y1.bandwidth())
+      .attr("width", d => x1(d.convictions));
+    svg1.selectAll(".reeducation")
+      .data(data1)
+      .enter().append("rect")
+      .attr("class", "reeducation")
+      .attr("y", d => y1(d.year))
+      .attr("x", d => x1(d.convictions))  // Start where convictions end
+      .attr("height", y1.bandwidth())
+      .attr("width", d => x1(d.reeducation));
+    
+    
+        // Bars for total arrests (interactive hover)
+        const bars = svg1.selectAll(".bar")
+          .data(data1)
+          .enter().append("rect")
+          .attr("class", "bar")
+          .attr("y", d => y1(d.year))
+          .attr("x", 0)
+          .attr("height", y1.bandwidth())
+          .attr("width", d => x1(d.arrests))
+          .on("mouseover", function(event, d) {
+            svg1.selectAll(".arrest-label").attr("opacity", 0);
+            svg1.selectAll(".bar").attr("opacity", 0.1);
+          })
+          .on("mouseout", function() {
+            svg1.selectAll(".arrest-label").attr("opacity", 1);
+            svg1.selectAll(".bar").attr("opacity", 1);
+          });       
+    
+    function updateBars(sortedData) {
+      // Update scales
+      y1.domain(sortedData.map(d => d.year));  // Update y scale to match sorted years
+    
+      // Select bars for convictions
+      const convictionBars = svg1.selectAll(".conviction")
+        .data(sortedData);
+    
+    convictionBars.enter().append("rect")
+      .attr("class", "conviction")
+      .merge(convictionBars)
+      .transition()
+      .duration(750)
+      .attr("y", d => y1(d.year))
+      .attr("x", 0)  // Start from left
+      .attr("height", y1.bandwidth())
+      .attr("width", d => x1(d.convictions));
+    
+      convictionBars.exit().remove();
+    
+      // Select bars for reeducation
+      const reeducationBars = svg1.selectAll(".reeducation")
+        .data(sortedData);
+    
+    reeducationBars.enter().append("rect")
+      .attr("class", "reeducation")
+      .merge(reeducationBars)
+      .transition()
+      .duration(750)
+      .attr("y", d => y1(d.year))
+      .attr("x", d => x1(d.convictions))  // Stack on top of convictions
+      .attr("height", y1.bandwidth())
+      .attr("width", d => x1(d.reeducation));
+    
+      reeducationBars.exit().remove();
+    
+      // Select bars for arrests
+      const arrestBars = svg1.selectAll(".bar")
+        .data(sortedData);
+    
+      arrestBars.enter().append("rect")
+        .attr("class", "bar")
+        .merge(arrestBars)
+        .transition()
+        .duration(750)
+        .attr("y", d => y1(d.year))  // Align the y position with sorted years
+        .attr("x", 0)
+        .attr("height", y1.bandwidth())
+        .attr("width", d => x1(d.arrests));
+    
+      arrestBars.exit().remove();
+    
+      // Update labels for total arrests
+      const arrestLabels = svg1.selectAll(".arrest-label")
+        .data(sortedData);
+    
+      arrestLabels.enter().append("text")
+        .attr("class", "arrest-label")
+        .merge(arrestLabels)
+        .transition()
+        .duration(750)
+        .attr("x", d => x1(d.arrests) - 5)
+        .attr("y", d => y1(d.year) + y1.bandwidth() / 2 + 5)  // Align label position with sorted years
+        .attr("text-anchor", "end")
+        .attr("fill", "white")
+        .text(d => d.arrests);
+    
+      arrestLabels.exit().remove();
+    
+      // Update y-axis with the sorted years
+      svg1.select(".y.axis")
+        .transition()
+        .duration(750)
+        .call(d3.axisLeft(y1)); 
+    }
+    
+        // Initial rendering of the bars
+        updateBars(data1);
+    
+        // Toggle functionality
+        let sortedByMaxMin = false;
+    
+        d3.select("#toggle-order").on("click", function() {
+          sortedByMaxMin = !sortedByMaxMin;
+    
+          if (sortedByMaxMin) {
+            data1.sort((a, b) => b.arrests - a.arrests);
+            d3.select(this).text("Switch to Chronological");
+          } else {
+            data1 = [...chronologicalData]; // Restore original chronological order
+            d3.select(this).text("Switch to Max-to-Min");
+          }
+    
+          updateBars(data1);
+        });
+    
+        // Add legend
+        const legend1 = svg1.append("g")
+          .attr("class", "legend")
+          .attr("transform", `translate(${width1-100}, 0)`);
+    
+        legend1.append("rect")
+          .attr("x", 0)
+          .attr("y", 0)
+          .attr("width", 20)
+          .attr("height", 20)
+          .style("fill", "steelblue");
+        legend1.append("text")
+          .attr("x", 30)
+          .attr("y", 15)
+          .text("Arrests");
+    
+        legend1.append("rect")
+          .attr("x", 0)
+          .attr("y", 30)
+          .attr("width", 20)
+          .attr("height", 20)
+          .style("fill", "pink");
+        legend1.append("text")
+          .attr("x", 30)
+          .attr("y", 45)
+          .text("Convictions");
+    
+        legend1.append("rect")
+          .attr("x", 0)
+          .attr("y", 60)
+          .attr("width", 20)
+          .attr("height", 20)
+          .style("fill", "yellow");
+        legend1.append("text")
+          .attr("x", 30)
+          .attr("y", 75)
+          .text("Reeducation");
+      
+    
+    
+/////////////////////////////////////////////////////////////////
+    const data = [
+      {year: 1984, innerParty: 59, outerParty: 25, proles: 16},
+      {year: 1994, innerParty: 79, outerParty: 11, proles: 10},
+      {year: 2004, innerParty: 80, outerParty: 15, proles: 5},
+      {year: 2014, innerParty: 84, outerParty: 11, proles: 5},
+      {year: 2024, innerParty: 90, outerParty: 8, proles: 2}
+    ];
+
+    const margin = {top: 30, right: 90, bottom: 30, left: 40},
+          width = 600 - margin.left - margin.right,
+          height = 400 - margin.top - margin.bottom;
+
+    const svg2 = d3.select("#chart2").append("svg")
+      .attr("width", width + margin.left + margin.right)
+      .attr("height", height + margin.top + margin.bottom)
+      .append("g")
+      .attr("transform", `translate(${margin.left},${margin.top})`);
+
+    const x = d3.scalePoint()
+      .domain(data.map(d => d.year))
+      .range([0, width])
+      .padding(0.5);
+
+    const y = d3.scaleLinear()
+      .domain([0, 100])
+      .range([height, 0]);
+
+    const color = d3.scaleOrdinal()
+      .domain(["innerParty", "outerParty", "proles"])
+      .range(["red", "blue", "green"]);
+
+    const stack = d3.stack()
+      .keys(["innerParty", "outerParty", "proles"])
+      .order(d3.stackOrderNone)
+      .offset(d3.stackOffsetNone);
+
+    const area = d3.area()
+      .x(d => x(d.data.year))
+      .y0(d => y(d[0]))
+      .y1(d => y(d[1]));
+
+    const series = stack(data);
+
+    svg2.selectAll(".layer")
+      .data(series)
+      .enter().append("path")
+      .attr("class", "layer")
+      .attr("d", area)
+      .style("fill", d => color(d.key));
+
+    // X-axis
+    svg2.append("g")
+      .attr("class", "axis")
+      .attr("transform", `translate(0,${height})`)
+      .call(d3.axisBottom(x));
+
+    // Y-axis
+    svg2.append("g")
+      .attr("class", "axis")
+      .call(d3.axisLeft(y));
+    svg2.append("text")
+      .text("%");
+
+
+    // Add vertical line for hover effect
+    const hoverLine = svg2.append("line")
+      .attr("class", "hover-line")
+      .attr("y1", 0)
+      .attr("y2", height);
+
+    const tooltip = d3.select("#tooltip");
+
+    // Mouse events for interactivity
+    svg2.append("rect")
+      .attr("width", width)
+      .attr("height", height)
+      .attr("fill", "none")
+      .attr("pointer-events", "all")
+      .on("mousemove", function(event) {
+        const [mouseX] = d3.pointer(event);
+
+        // Find the closest year to the hovered position
+        const closestYear = data.reduce((prev, curr) => {
+          return Math.abs(x(curr.year) - mouseX) < Math.abs(x(prev.year) - mouseX) ? curr : prev;
+        }).year;
+
+        const yearData = data.find(d => d.year === closestYear);
+
+        // Update hover line position
+        hoverLine
+          .attr("x1", x(closestYear))
+          .attr("x2", x(closestYear))
+          .attr("opacity", 1);
+
+        // Update tooltip content and position
+        tooltip
+          .html(`Year: ${closestYear}<br>Inner Party: ${yearData.innerParty}%<br>Outer Party: ${yearData.outerParty}%<br>Proles: ${yearData.proles}%`)
+          .style("left", `${event.pageX + 10}px`)
+          .style("top", `${event.pageY - 20}px`)
+          .style("opacity", 1);
+      })
+      .on("mouseout", function() {
+        // Hide hover line and tooltip
+        hoverLine.attr("opacity", 0);
+        tooltip.style("opacity", 0);
+      });
+
+      // Create a legend group
+const legend = svg2.append('g')
+    .attr('class', 'legend')
+    .attr('transform', 'translate(450, 20)'); // Adjust position as needed
+
+// Define legend items
+const legendData = [
+  { name: 'InnerParty', color: 'red' },
+  { name: 'OuterParty', color: 'blue' },
+  { name: 'Proles', color: 'green' }
+];
+
+// Create legend items
+legend.selectAll('g')
+    .data(legendData)
+    .enter()
+    .append('g')
+    .attr('transform', (d, i) => `translate(0, ${i * 20})`)
+  .append('rect')
+    .attr('width', 18)
+    .attr('height', 18)
+    .attr('fill', d => d.color);
+
+legend.selectAll('g')
+  .append('text')
+    .attr('x', 24)
+    .attr('y', 9)
+    .attr('dy', '.35em')
+    .text(d => d.name);
+
+  </script>
+</body>
+</html>

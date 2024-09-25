@@ -1,0 +1,34 @@
+h1 {    
+    text-align: center;
+    color: blue;
+}
+
+p {
+    color: black;
+    font-size: 20px;
+}
+
+header {
+    background-color: black;
+    padding: 20px;
+}
+
+nav li a {
+    text-decoration: none;
+    color: #C2A61C;
+    padding: 10px;
+    font-size: 20px;
+}
+
+nav ul {
+    list-style: none;
+    /* a flex container allows its items to be arranged horizontally */
+    display: flex; /* This is the key change to display items horizontally */
+    justify-content: space-between;
+}
+
+body {
+    margin: 2%;
+    border: 1px solid black;
+    background-color: #b9b9b9;
+}
