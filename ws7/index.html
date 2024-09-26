@@ -10,6 +10,16 @@
         .default-scheme {
             background-color: #b9b9b9;
             color: black;
+            
+        }
+
+        .default-scheme main {
+            background-image: url("images/hz0.png");
+            /* background-size: cover;*/
+            background-position: center;
+            background-repeat: repeat-y;
+            background-position: center;
+            background-attachment: fixed;
         }
 
         .default-scheme h1 {
@@ -41,23 +51,25 @@
         a:hover {
             color: salmon;
         }
+        nav li a:hover {
+            color: #C2A61C;
+            padding: 15px;
+            background-color: blue;
+            border: 1px solid darkblue;
+        }
+        
+        nav li a {
+            text-decoration: none;
+            color: #C2A61C;
+            padding: 15px;
+            font: 20px Tahoma, Arial, sans-serif;
+            background-color: cyan;
+            border: 1px solid navy;
+        }
 
         
 
-        .button {
-            margin-top: 20px;
-            padding: 10px;
-            font-size: 16px;
-            cursor: pointer;
-        }
-
-        .button:hover {
-            background-color: lightsalmon;
-        }
-
-        .button1 {background-color: #04AA6D;}
-        .button2 {background-color: #0F8CBA;}
-        .button3 {background-color: #880808;}
+       
 
         .stopwatch {font-size: 40px;}
 
@@ -80,19 +92,19 @@
             position: relative;
             display: inline-block;
             border: black solid 5px;
-            }
+        }
 
-            .dropdown-content {
+        .dropdown-content {
             display: none;
             position: absolute;
             background-color: yellow;
             min-width: 200px;
             z-index: 1;
-            }
+        }
 
-            .dropdown:hover .dropdown-content {
+        .dropdown:hover .dropdown-content {
             display: block;
-            }
+        }
     </style>
     <!-- 'defer' ensures the script loads after the page -->
     <script src="js/script2.js" defer></script>
@@ -109,9 +121,10 @@
             </ul>
         </nav>        
     </header>
+    <main>
     <h1>Welcome to the Home page</h1>
     <p>The purpose of this page is to demonstrate the simplest examples of how dynamic content of webpages could improve user experience (UX). The first example: if you wish, change the colour scheme of the page (this is especially important for colour-blind people)</p>
-    <button class="button" id="toggle-btn">Toggle Colour Scheme</button>
+    <button class="button button2" id="toggle-btn">Toggle Colour Scheme</button>
 
     <div id="review">
         <p style="font-size: 25px;">Interactivity of dynamic webpages could help to make <a href="orwell.html">data visualisations</a> more enticing.</p>
@@ -152,7 +165,7 @@
     <button class="button button2" onclick="setOperation('/')">/</button>
     <button class="button button1" onclick="calculate()">=</button>
     <br>
-    <button class="button" onclick="clearFields()">Clear</button>
+    <button class="button button2" onclick="clearFields()">Clear</button>
 
     <div id="result"></div>
 
@@ -160,12 +173,12 @@
 
     <label>First number:</label>
     <input type="number" id="num10" step="any">
-    <button class="button" onclick="addMemoryTo('num10')">M+</button>
+    <button class="button button2" onclick="addMemoryTo('num10')">M+</button>
     <br>
 
     <label>Second number:</label>
     <input type="number" id="num20" step="any">
-    <button class="button" onclick="addMemoryTo('num20')">M+</button>
+    <button class="button button2" onclick="addMemoryTo('num20')">M+</button>
     <br>
 
     <label>Decimal places:</label>
@@ -188,14 +201,14 @@
     <br>
 
     <div id="result0"></div>
-    <button class="button" onclick="saveToMemory()">Save to Memory</button>
+    <button class="button button2" onclick="saveToMemory()">Save to Memory</button>
 
     <div id="memory-display">Memory: 0</div>
     <br>
 
-    <button class="button" onclick="clearMemory()">Clear Memory</button>
-    <button class="button" onclick="clearAll()">Clear All</button>
-    <button class="button" onclick="clearCalculations()">Clear Calculations</button>
+    <button class="button button2" onclick="clearMemory()">Clear Memory</button>
+    <button class="button button2" onclick="clearAll()">Clear All</button>
+    <button class="button button2" onclick="clearCalculations()">Clear Calculations</button>
 
     
     <h1>Interactivity via HTML/ CSS</h1>
@@ -218,6 +231,6 @@
     <h2>Alert trigger</h2>
     <p style="font-size: 20px;">Finally, if you have nothing else to do, click the button below. It's really annoying to see those nasty alerts without any need for them...<br>A really great way to destroy the UX.</p>
     <button class="button button3" onclick="func3()">Alert trigger</button>
-    
+</main>
 </body>
 </html>

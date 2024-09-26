@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <style>
+        /* Default Colour Scheme */
+        .default-scheme {
+            background-color: #b9b9b9;
+            color: black;
+            
+        }
+
+        header {
+            background-color: green;
+            padding: 20px;
+        }
+
+        .default-scheme main {
+            background-image: url("images/hz0.png");
+            /* background-size: cover;*/
+            background-position: center;
+            background-repeat: repeat-y;
+            background-position: center;
+            background-attachment: fixed;
+        }
+
+        .default-scheme h1 {
+            color: blue;
+        }
+
+        .default-scheme p {
+            color: black;
+        }
+
+        /* New Scheme */
+        .new-scheme {
+            background-color: #222222;
+            color: lime;
+        }
+
+        .new-scheme h1 {
+            color: yellow;
+        }
+
+        .new-scheme p {
+            color: lime;
+        }
+
+        .new-scheme #review a {
+            color: yellow;
+        }
+
+        a:hover {
+            color: salmon;
+        }
+        nav li a:hover {
+            color: #C2A61C;
+            padding: 15px;
+            background-color: blue;
+            border: 1px solid darkblue;
+        }
+        
+        nav li a {
+            text-decoration: none;
+            color: #C2A61C;
+            padding: 15px;
+            font: 20px Tahoma, Arial, sans-serif;
+            background-color: cyan;
+            border: 1px solid navy;
+        }
+
+        
+
+       
+
+        .stopwatch {font-size: 40px;}
+
+        input {
+            font-size: 20px;
+            margin: 5px;
+        }
+
+        label {
+            font-size: 20px;
+            margin: 5px;
+        } 
+        #result, #result0 {
+            font-size: 25px;
+            margin-top: 10px;
+            background-color: #af8dc3;
+        }
+
+        .dropdown {
+            position: relative;
+            display: inline-block;
+            border: black solid 5px;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: yellow;
+            min-width: 200px;
+            z-index: 1;
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+    </style>
+    <!-- 'defer' ensures the script loads after the page -->
+    <script src="js/script2.js" defer></script>
+</head>
+<body class="default-scheme">
+    <header>
+        <div class="w3-bar w3-green">           
+            <a href="index.html" class="w3-bar-item w3-button">Home</a>
+            <a href="orwell.html" class="w3-bar-item w3-button">DataVis</a>
+            <a href="gallery.html" class="w3-bar-item w3-button">Gallery</a> 
+            <a href="game.html" class="w3-bar-item w3-button">Game</a>
+            
+        </div>      
+    </header>
+    <main>
+    <h1>Welcome to the Home page</h1>
+    <p>The purpose of this page is to demonstrate the simplest examples of how dynamic content of webpages could improve user experience (UX). The first example: if you wish, change the colour scheme of the page (this is especially important for colour-blind people)</p>
+    <button class="button button2" id="toggle-btn">Toggle Colour Scheme</button>
+
+    <div id="review">
+        <p style="font-size: 25px;">Interactivity of dynamic webpages could help to make <a href="orwell.html">data visualisations</a> more enticing.</p>
+        <p style="font-size: 25px;">Interactive photo/ image <a href="gallery.html">galleries</a> could give a bit of unpredicatbility for the user</p>
+        <p style="font-size: 25px;">As for <a href="game.html">games</a>, even the simplest ones, interactivity is a must.</p>
+    </div>
+    <h1>Stopwatch</h1>
+    <p>For now, you can play with a Stopwatch</p>
+    <div class="stopwatch" id="display">00:00:00.00</div>
+    <button class="button button2" onclick="start()">Start</button>
+    <button class="button button2" onclick="stop()">Stop</button>
+    <button class="button button2" onclick="reset()">Reset</button>
+
+    <h1>Calculator</h1>
+    <label>First number:</label>
+    <input type="number" id="num1" step="any">
+    <br>
+
+    <label>Second number:</label>
+    <input type="number" id="num2" step="any">
+    <br>
+
+    <label>Decimal places:</label>
+    <select id="decimals">
+        <option value="0">0</option>
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+        <option value="6" selected>6</option>
+    </select>
+    <br>
+
+    <button class="button button2" onclick="setOperation('+')">+</button>
+    <button class="button button2" onclick="setOperation('-')">-</button>
+    <button class="button button2" onclick="setOperation('*')">*</button>
+    <button class="button button2" onclick="setOperation('/')">/</button>
+    <button class="button button1" onclick="calculate()">=</button>
+    <br>
+    <button class="button button2" onclick="clearFields()">Clear</button>
+
+    <div id="result"></div>
+
+    <h1>Calculator with Memory</h1>
+
+    <label>First number:</label>
+    <input type="number" id="num10" step="any">
+    <button class="button button2" onclick="addMemoryTo('num10')">M+</button>
+    <br>
+
+    <label>Second number:</label>
+    <input type="number" id="num20" step="any">
+    <button class="button button2" onclick="addMemoryTo('num20')">M+</button>
+    <br>
+
+    <label>Decimal places:</label>
+    <select id="decimals0">
+        <option value="0">0</option>
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+        <option value="6" selected>6</option>
+    </select>
+    <br>
+
+    <button class="button button2" onclick="setOperation0('+')">+</button>
+    <button class="button button2" onclick="setOperation0('-')">-</button>
+    <button class="button button2" onclick="setOperation0('*')">*</button>
+    <button class="button button2" onclick="setOperation0('/')">/</button>
+    <button class="button button1" onclick="calculate0()">=</button>
+    <br>
+
+    <div id="result0"></div>
+    <button class="button button2" onclick="saveToMemory()">Save to Memory</button>
+
+    <div id="memory-display">Memory: 0</div>
+    <br>
+
+    <button class="button button2" onclick="clearMemory()">Clear Memory</button>
+    <button class="button button2" onclick="clearAll()">Clear All</button>
+    <button class="button button2" onclick="clearCalculations()">Clear Calculations</button>
+
+    
+    <h1>Interactivity via HTML/ CSS</h1>
+    <p>CSS and even HTML allow some dynamic resonse without using JS. We got used to some visual dynamics (for instance, colour change) when you hover a mouse pointer over a link, button, etc. HTML tags &ltdetails&gt and &ltsummary&gt allow the user to open and close additional information:</p> 
+    <details>
+        <summary style="font-size: 25px;">Artificial Intelligence</summary>
+        <p style="font-size: 20px; background-color: yellow;">Artificial intelligence is a system's ability to understand external data, to learn from that data, and to use what it has learned to achieve specific goals or  tasks. The first mention of an inanimate object which gained consiousness we can find in the Epic of Gilgamesh: Enkidu was molded from clay but infused with life and consiousness by wild animals. Enkidu lived among them for seven years. His linguistic abilities Enkidu probably got from Gilgamesh himself when they first fought and later became friends and companions. It's worth to note that even Mesopotamian mythology understood that an inanimate object needs training on real data to gain ability to speak and reason.</p>
+    </details>
+    <p>With "display" attribute (using none or block values) it's easy to reproduce the drop down effect in CSS:</p>
+     
+    <div class="dropdown">
+        <p>Hover your mouse over here</p>
+        <div class="dropdown-content">
+        <p>Some hidden content</p>
+        </div>
+      </div>
+    </div>
+    <p>The CSS Advanced section in <a href="https://www.w3schools.com/css/default.asp">w3schools</a> provides numerous dynamic effects like animation, transitions etc but I see little or no real value in them.</p>
+
+    <h2>Alert trigger</h2>
+    <p style="font-size: 20px;">Finally, if you have nothing else to do, click the button below. It's really annoying to see those nasty alerts without any need for them...<br>A really great way to destroy the UX.</p>
+    <button class="button button3" onclick="func3()">Alert trigger</button>
+</main>
+</body>
+</html>
