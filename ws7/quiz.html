@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quiz</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background-color: #f4f4f9;
+    }
+    #quiz-container {
+      background-color: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+      max-width: 600px;
+      width: 100%;
+    }
+    h1 {
+      font-size: 24px;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+    .question {
+      margin-bottom: 20px;
+    }
+    .options {
+      list-style: none;
+      padding: 0;
+    }
+    .options li {
+      margin: 10px 0;
+    }
+    .options button {
+      padding: 10px;
+      width: 100%;
+      font-size: 16px;
+      border: 2px solid #ccc;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .options button:hover {
+      background-color: #f0f0f0;
+    }
+    .next-btn {
+      margin-top: 20px;
+      width: 100%;
+      padding: 10px;
+      font-size: 16px;
+      border: none;
+      background-color: #4CAF50;
+      color: white;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+    .next-btn:hover {
+      background-color: #45a049;
+    }
+  </style>
+  <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script type="text/babel">
+
+    const { useState, useEffect } = React;
+
+    const questions = [
+      {
+        question: "What is the capital of Australia?",
+        options: ["Sydney", "Canberra", "Melbourne", "Brisbane"],
+        correct: [1] // Canberra
+      },
+      {
+        question: "What was the first financial instrument in history?",
+        options: ["Coins", "Futures", "IOUs", "Swaps", "Loans", "Options"],
+        correct: [2] // IOUs
+      },
+      {
+        question: "Which CSS property is used to control the visibility of an element?",
+        options: ["display", "visibility", "hidden"],
+        correct: [0, 1] // Both display and visibility are correct
+      }
+    ];
+
+    function QuizApp() {
+      const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+      const [correctAnswers, setCorrectAnswers] = useState(0);
+      const [wrongAnswers, setWrongAnswers] = useState(0);
+      const [attempts, setAttempts] = useState(0);
+      const [timeSpent, setTimeSpent] = useState(0);
+      const [timer, setTimer] = useState(null);
+      const [selectedAnswers, setSelectedAnswers] = useState([]);
+
+      // Track time spent on each question
+      useEffect(() => {
+        const startTime = Date.now();
+        const interval = setInterval(() => {
+          setTimeSpent(Math.floor((Date.now() - startTime) / 1000));
+        }, 1000);
+        return () => clearInterval(interval);
+      }, [currentQuestionIndex]);
+
+      const handleAnswer = (index) => {
+        setSelectedAnswers([...selectedAnswers, index]);
+
+        if (questions[currentQuestionIndex].correct.includes(index)) {
+          setCorrectAnswers(correctAnswers + 1);
+        } else {
+          setWrongAnswers(wrongAnswers + 1);
+        }
+
+        setAttempts(attempts + 1);
+      };
+
+      const handleNextQuestion = () => {
+        setSelectedAnswers([]); // reset selected answers
+        setCurrentQuestionIndex(currentQuestionIndex + 1);
+      };
+
+      if (currentQuestionIndex >= questions.length) {
+        return (
+          <div id="quiz-container">
+            <h1>Quiz Complete</h1>
+            <p>Total Correct Answers: {correctAnswers}</p>
+            <p>Total Wrong Answers: {wrongAnswers}</p>
+            <p>Total Attempts: {attempts}</p>
+            <p>Total Time Taken: {timeSpent} seconds</p>
+          </div>
+        );
+      }
+
+      return (
+        <div id="quiz-container">
+          <h1>Quiz</h1>
+          <p className="question">Question {currentQuestionIndex + 1}: {questions[currentQuestionIndex].question}</p>
+          <ul className="options">
+            {questions[currentQuestionIndex].options.map((option, index) => (
+              <li key={index}>
+                <button onClick={() => handleAnswer(index)} disabled={selectedAnswers.includes(index)}>
+                  {option}
+                </button>
+              </li>
+            ))}
+          </ul>
+          {selectedAnswers.length > 0 && (
+            <button className="next-btn" onClick={handleNextQuestion}>Next Question</button>
+          )}
+          <p>Time spent on this question: {timeSpent} seconds</p>
+        </div>
+      );
+    }
+
+    ReactDOM.render(<QuizApp />, document.getElementById('root'));
+    
+  </script>
+</body>
+</html>

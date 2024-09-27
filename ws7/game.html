@@ -53,7 +53,7 @@
                 <li><a href="orwell.html">DataVis</a></li>
                 <li><a href="gallery.html">Gallery</a></li> 
                 <li><a href="game.html">Game</a></li>
-                <!--<li><a href="reactPlGround.html">React</a></li>-->
+                <li><a href="reactPlGround.html">React</a></li>
             </ul>
         </nav>        
     </header>
@@ -154,76 +154,12 @@
             repr[i1][j1] = repr[i2][j2];
             repr[i2][j2] = tempor;
         }
-/*
-        function findMatches() {
-            // Initialise the mask array
-            const mask = [];
-            for (let i = 0; i < numRows; i++) {
-                mask.push([]);
-                for (let j = 0; j < numCol; j++) {
-                mask[i][j] = 0;
-                }
-            }
 
-            // Check for horizontal matches
-            for (let i = 0; i < numRows; i++) {
-                let count = 1;
-                for (let j = 1; j < numCol; j++) {
-                if (repr[i][j] === repr[i][j - 1]) {
-                    count++;
-                    if (count >= 3) {
-                    for (let k = j - count + 1; k <= j; k++) {
-                        mask[i][k] = 1;
-                    }
-                    }
-                } else {
-                    count = 1;
-                }
-                }
-            }
-
-            // Check for vertical matches
-            for (let j = 0; j < numCol; j++) {
-                let count = 1;
-                for (let i = 1; i < numRows; i++) {
-                if (repr[i][j] === repr[i - 1][j]) {
-                    count++;
-                    if (count >= 3) {
-                    for (let k = i - count + 1; k <= i; k++) {
-                        mask[k][j] = 1;
-                    }
-                    }
-                } else {
-                    count = 1;
-                }
-                }
-            }            
-            // Calculate the total score
-            let totalScore = 0;
-            for (let i = 0; i < numRows; i++) {
-                for (let j = 0; j < numCol; j++) {
-                if (mask[i][j] === 1) {
-                    totalScore++;
-                }
-                }
-            }
-
-            // Update the score element
-            const scoreElement = document.getElementById('score');
-            score = score + totalScore; // Add the new score to the current score
-            scoreElement.textContent = `Score: ${score}`;
-            }
-*/
-
-
+        // Find matches and update score
 function findMatches() {
-    // Initialise the mask array
     const mask = [];
     for (let i = 0; i < numRows; i++) {
-        mask.push([]);
-        for (let j = 0; j < numCol; j++) {
-            mask[i][j] = 0;
-        }
+        mask.push(new Array(numCol).fill(0));
     }
 
     // Check for horizontal matches
@@ -274,22 +210,23 @@ function findMatches() {
         // Delay for animation before removing gems
         setTimeout(() => {
             removeMatches(mask);
-        }, 500); // Adjust delay as necessary for the animation
+        }, 1500); // Adjust delay as necessary for the animation
     }
 
     // Update the score element
     const scoreElement = document.getElementById('score');
-    score = score + totalScore; // Add the new score to the current score
+    score += totalScore; // Add the new score to the current score
     scoreElement.textContent = `Score: ${score}`;
 }
 
+// Remove matched gems
 function removeMatches(mask) {
     // Animate gem removal by fading them out
     for (let i = 0; i < numRows; i++) {
         for (let j = 0; j < numCol; j++) {
             if (mask[i][j] === 1) {
                 board[i][j].element.style.transition = 'opacity 0.5s';
-                board[i][j].element.style.opacity = 0;
+                board[i][j].element.style.opacity = 0; // Fade out effect
             }
         }
     }
@@ -312,10 +249,117 @@ function removeMatches(mask) {
         if (newGemsGenerated) {
             setTimeout(() => {
                 findMatches(); // Recursively find and remove new matches
-            }, 500); // Add a small delay to allow the player to see the new gems before checking again
+            }, 1500); // Add a small delay to allow the player to see the new gems before checking again
         }
-    }, 500); // Match the delay to the transition time
+    }, 1500); // Match the delay to the transition time
 }
+
+
+
+        /*
+        function findMatches() {
+            // Initialise the mask array
+            const mask = [];
+            for (let i = 0; i < numRows; i++) {
+                mask.push([]);
+                for (let j = 0; j < numCol; j++) {
+                    mask[i][j] = 0;
+                }
+            }
+
+            // Check for horizontal matches
+            for (let i = 0; i < numRows; i++) {
+                let count = 1;
+                for (let j = 1; j < numCol; j++) {
+                    if (repr[i][j] === repr[i][j - 1]) {
+                        count++;
+                        if (count >= 3) {
+                            for (let k = j - count + 1; k <= j; k++) {
+                                mask[i][k] = 1;
+                            }
+                        }
+                    } else {
+                        count = 1;
+                    }
+                }
+            }
+
+            // Check for vertical matches
+            for (let j = 0; j < numCol; j++) {
+                let count = 1;
+                for (let i = 1; i < numRows; i++) {
+                    if (repr[i][j] === repr[i - 1][j]) {
+                        count++;
+                        if (count >= 3) {
+                            for (let k = i - count + 1; k <= i; k++) {
+                                mask[k][j] = 1;
+                            }
+                        }
+                    } else {
+                        count = 1;
+                    }
+                }
+            }
+
+            // Calculate the total score
+            let totalScore = 0;
+            for (let i = 0; i < numRows; i++) {
+                for (let j = 0; j < numCol; j++) {
+                    if (mask[i][j] === 1) {
+                        totalScore++;
+                    }
+                }
+            }
+
+            if (totalScore > 0) {
+                // Delay for animation before removing gems
+                setTimeout(() => {
+                    removeMatches(mask);
+                }, 500); // Adjust delay as necessary for the animation
+            }
+
+            // Update the score element
+            const scoreElement = document.getElementById('score');
+            score = score + totalScore; // Add the new score to the current score
+            scoreElement.textContent = `Score: ${score}`;
+        }
+        */
+
+        /*
+        function removeMatches(mask) {
+            // Animate gem removal by fading them out
+            for (let i = 0; i < numRows; i++) {
+                for (let j = 0; j < numCol; j++) {
+                    if (mask[i][j] === 1) {
+                        board[i][j].element.style.transition = 'opacity 0.5s';
+                        board[i][j].element.style.opacity = 0;
+                    }
+                }
+            }
+
+            // After the fade-out effect, clear the matched gems and refill the board
+            setTimeout(() => {
+                let newGemsGenerated = false;
+                for (let i = 0; i < numRows; i++) {
+                    for (let j = 0; j < numCol; j++) {
+                        if (mask[i][j] === 1) {
+                            repr[i][j] = getRandomNumber(); // Refill with new random gem
+                            newGemsGenerated = true;
+                        }
+                    }
+                }
+
+                createBoard(); // Rebuild the board after updating the repr array
+
+                // Check for any new matches after refill
+                if (newGemsGenerated) {
+                    setTimeout(() => {
+                        findMatches(); // Recursively find and remove new matches
+                    }, 500); // Add a small delay to allow the player to see the new gems before checking again
+                }
+            }, 500); // Match the delay to the transition time
+        }
+        */
 
 
     </script>

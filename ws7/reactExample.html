@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ReactExample</title>
+    <!--CDN links for React and ReactDOM-->
+    <script src="https://unpkg.com/react@17/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
+    <!--Add Babel to transpile JSX-->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <style>
+        /* Slideshow.css */
+        .slideshow-window {
+            width: 400px;
+            height: 600px;
+            margin: 0 auto;
+            position: relative;
+            text-align: center;
+        }
+
+        .slideshow-window img {
+            max-width: 100%;
+            max-height: 100%;
+            display: block;
+            margin: 0 auto;
+        }
+
+        .slideshow-window h2 {
+            position: absolute;
+            bottom: 10px;
+            left: 0;
+            right: 0;
+            color: white;
+            background-color: rgba(0, 0, 0, 0.5);
+            padding: 10px;
+            margin: 0;
+            font-size: 1.5em;
+        }
+
+        .thumbnail-container {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .thumbnail-container div {
+            border-radius: 5px;
+            overflow: hidden;
+            transition: border 0.3s ease;
+        }
+
+        .thumbnail-container div:hover {
+            border: 2px solid blue;
+        }
+
+        .thumbnail-container img {
+            width: 100px;
+            height: auto;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .thumbnail-container img:hover {
+            transform: scale(1.1);
+        }
+
+        main {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-family: Arial, sans-serif;
+        }
+
+        #game-board {
+            display: grid;
+            grid-template-columns: repeat(5, 50px);
+            grid-template-rows: repeat(5, 50px);
+            gap: 2px;
+        }
+
+        .cell {
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .hexagon {
+            width: 40px;
+            height: 40px;
+            clip-path: polygon(25% 6.7%, 75% 6.7%, 100% 50%, 75% 93.3%, 25% 93.3%, 0% 50%);
+        }
+
+        .blue { background-color: blue; }
+        .brown { background-color: brown; }
+        .yellow { background-color: yellow; }
+
+        .selected {
+            border: 2px solid magenta;
+        }
+
+        #score {
+            font-size: 40px;
+        }
+
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+    <div id="root2"></div>
+
+    <script type="text/babel"> /* required when using JSX inside a script tag*/
+
+        const imgOptions = [
+            ["Cleopatra", "images/g1.png"],
+            ["Young boy with flowers", "images/b1.png"],
+            ["Yoda", "images/yoda.png"],
+            ["Young lady", "images/g2.png"],
+            ["Duet", "images/music.png"],
+            ["Boy with blue eyes", "images/b2.png"],
+            ["Smart dog", "images/dog.png"],
+            ["Young girl", "images/g3.png"],
+            ["Happy friends", "images/m1.png"],
+            ["Happy girl", "images/m2.png"]
+        ];
+
+        const Slideshow = () => {
+            const [activeIndex, setActiveIndex] = React.useState(0);
+
+            const handleThumbnailClick = (index) => {
+                setActiveIndex(index);
+            };
+
+            return (
+                <div>
+                    {/* Main Image */}
+                    <div className="slideshow-window">
+                        <img
+                            src={imgOptions[activeIndex][1]}
+                            alt={imgOptions[activeIndex][0]}
+                            style={{ width: "100%", height: "auto" }}
+                        />
+                        <h2>{imgOptions[activeIndex][0]}</h2>
+                    </div>
+
+                    {/* Thumbnails */}
+                    <div className="thumbnail-container">
+                        {imgOptions.map((img, index) => (
+                            <div
+                                key={index}
+                                style={{
+                                    margin: "0 10px",
+                                    cursor: "pointer",
+                                    border: activeIndex === index ? "2px solid blue" : "2px solid transparent"
+                                }}
+                                onClick={() => handleThumbnailClick(index)}
+                            >
+                                <img src={img[1]} alt={img[0]} style={{ width: "100px", height: "auto" }} />
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            );
+        };
+        /* 
+        The ReactDOM.render() method mounts the Slideshow component to the #root div
+        */
+        ReactDOM.render(<Slideshow />, document.getElementById('root'));
+
+    const colours = ['blue', 'brown', 'yellow'];
+
+    const Game = () => {
+        const numRows = 5;
+        const numCols = 5;
+        /*
+        State Management: useState is used to manage board, repr, score, and selectedCell
+        */
+        const [board, setBoard] = React.useState(generateRandomBoard());
+        const [selectedCell, setSelectedCell] = React.useState(null);
+        const [score, setScore] = React.useState(0);
+        const [repr, setRepr] = React.useState(generateRandomBoard());
+        const [flag, setFlag] = React.useState(false);
+
+        function generateRandomBoard() {
+            const newBoard = [];
+            for (let i = 0; i < numRows; i++) {
+                newBoard.push([]);
+                for (let j = 0; j < numCols; j++) {
+                    newBoard[i].push(getRandomNumber());
+                }
+            }
+            return newBoard;
+        }
+
+        function getRandomNumber() {
+            return Math.floor(Math.random() * colours.length);
+        }
+
+        function handleCellClick(i, j) {
+            if (flag) {
+                if (isNeighbour2(i, j, selectedCell.i, selectedCell.j)) {
+                    swapGems(selectedCell.i, selectedCell.j, i, j);
+                    setFlag(false);
+                } else {
+                    alert("Cells must be next to each other");
+                    setFlag(false);
+                }
+            } else {
+                setSelectedCell({ i, j });
+                setFlag(true);
+            }
+        }
+
+        function swapGems(i1, j1, i2, j2) {
+            const newRepr = [...repr];
+            [newRepr[i1][j1], newRepr[i2][j2]] = [newRepr[i2][j2], newRepr[i1][j1]];
+            setRepr(newRepr);
+            checkForMatches(newRepr);
+        }
+
+        function isNeighbour2(i1, j1, i2, j2) {
+            const dx = Math.abs(i1 - i2);
+            const dy = Math.abs(j1 - j2);
+            return (dx <= 1 && dy <= 1) && !(dx === 0 && dy === 0);
+        }
+
+        function checkForMatches(board) {
+            const mask = Array(numRows).fill().map(() => Array(numCols).fill(0));
+            let newScore = 0;
+
+            // Horizontal matches
+            for (let i = 0; i < numRows; i++) {
+                let count = 1;
+                for (let j = 1; j < numCols; j++) {
+                    if (board[i][j] === board[i][j - 1]) {
+                        count++;
+                        if (count >= 3) {
+                            for (let k = j - count + 1; k <= j; k++) {
+                                mask[i][k] = 1;
+                            }
+                            newScore += count;
+                        }
+                    } else {
+                        count = 1;
+                    }
+                }
+            }
+
+            // Vertical matches
+            for (let j = 0; j < numCols; j++) {
+                let count = 1;
+                for (let i = 1; i < numRows; i++) {
+                    if (board[i][j] === board[i - 1][j]) {
+                        count++;
+                        if (count >= 3) {
+                            for (let k = i - count + 1; k <= i; k++) {
+                                mask[k][j] = 1;
+                            }
+                            newScore += count;
+                        }
+                    } else {
+                        count = 1;
+                    }
+                }
+            }
+
+            if (newScore > 0) {
+                removeMatches(mask);
+            }
+
+            setScore(score + newScore);
+        }
+
+        function removeMatches(mask) {
+            const newRepr = [...repr];
+            for (let i = 0; i < numRows; i++) {
+                for (let j = 0; j < numCols; j++) {
+                    if (mask[i][j] === 1) {
+                        newRepr[i][j] = getRandomNumber();
+                    }
+                }
+            }
+            setRepr(newRepr); 
+            createBoard(); // Optionally re-render after matches removed
+        }
+
+        /* dynamically create the game board by mapping over repr */
+        function createBoard() {
+            return repr.map((row, i) => (
+                row.map((cell, j) => (
+                    <div
+                        key={`${i}-${j}`}
+                        className="cell"
+                        onClick={() => handleCellClick(i, j)}
+                    >
+                        <div className={`hexagon ${colours[cell]}`}></div>
+                    </div>
+                ))
+            ));
+        }
+
+        return (
+            <div>
+                <div id="game-board">
+                    {createBoard()}
+                </div>
+                <div id="score">Score: {score}</div>
+            </div>
+        );
+    };
+
+    ReactDOM.render(<Game />, document.getElementById('root2'));
+
+    </script>
+</body>
+</html>

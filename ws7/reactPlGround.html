@@ -5,8 +5,73 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ReactPlGround</title>
     <link rel="stylesheet" href="css/styles.css">
-</head>
-<body>
+     <!--CDN links for React and ReactDOM-->
+     <script src="https://unpkg.com/react@17/umd/react.development.js"></script>
+     <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
+     <!--Add Babel to transpile JSX-->
+     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+     <style>
+        h1 {
+            text-align: center;
+        }
+         /* Slideshow.css */
+         .slideshow-window {
+             width: 400px;
+             height: 600px;
+             margin: 0 auto;
+             position: relative;
+             text-align: center;
+         }
+ 
+         .slideshow-window img {
+             max-width: 100%;
+             max-height: 100%;
+             display: block;
+             margin: 0 auto;
+         }
+ 
+         .slideshow-window h2 {
+             position: absolute;
+             bottom: 10px;
+             left: 0;
+             right: 0;
+             color: white;
+             background-color: rgba(0, 0, 0, 0.5);
+             padding: 10px;
+             margin: 0;
+             font-size: 1.5em;
+         }
+ 
+         .thumbnail-container {
+             margin-top: 20px;
+             display: flex;
+             justify-content: center;
+             gap: 10px;
+         }
+ 
+         .thumbnail-container div {
+             border-radius: 5px;
+             overflow: hidden;
+             transition: border 0.3s ease;
+         }
+ 
+         .thumbnail-container div:hover {
+             border: 2px solid blue;
+         }
+ 
+         .thumbnail-container img {
+             width: 100px;
+             height: auto;
+             cursor: pointer;
+             transition: transform 0.3s ease;
+         }
+ 
+         .thumbnail-container img:hover {
+             transform: scale(1.1);
+         }
+        </style>
+    </head>
+    <body>
     <header>
         <nav>
             <ul>
@@ -19,7 +84,78 @@
         </nav>        
     </header>
     <h1>React Playground</h1>
-    <h2>TBD</h2>
-    <p>The basic idea behind React is to create modular components which are reusable and can interact with each other. The user also can interact with them.</p>
+    
+    <p>The basic idea behind React (a JS library for building UIs, user interfaces) is to create modular components which are reusable and can interact with each other. The user also can interact with them. A webpage is composed of these components. Components are JS objects. Coomponents define properties, (event-based) state variables, and event handlers or call-back functions. A component generates HTML with render() function using the so called Virtual DOM. Both properties and states are attributes and values, but properties are set when the component is created and they never change. State variables (initialised in the constructor) represent the current state of the component so they can be modified.</p>
+    <p>React’s component-based structure promotes reusability, separation of concepts, and maintainability. Each part of the UI is broken into isolated, reusable components.</p>
+    <p>Declarative UI. React’s declarative approach means that you describe what the UI should look like at any given time (using JSX), and React handles the how (e.g., updating the DOM as the data changes).</p>
+    <p>Enough theory! Let's do something useful!</p>
+    <h1>Gallery Built With React</h1>
+    <div id="root"></div>
+    <p style="text-align: center; color:blue">Click on a thumbnail image!</p>
+    <p>The above Gallery was built in React using <a href="https://babeljs.io/">Babel</a>, a JavaScript compiler that converts modern JavaScript code (ES6+) into a version that can be understood by older/ legacy browsers. Declarative UI allows us to toggle between different image views, component-based structure for individual images and lightbox. React’s advantages: Smooth UI updates when switching between images with React’s Virtual DOM; maintaining state for tracking the currently selected image.</p>
+    <p><a href="https://www.w3schools.com/react/react_jsx.asp">JSX</a>, a technology for embedding HTML directly into the JavaScript, is a core part of React. Babel converts JSX code into regular JavaScript that the browser can interpret.</p>
+    
+    
+    <script type="text/babel"> /* required when using JSX inside a script tag*/
+        /* const imgOptions is property*/
+        const imgOptions = [           
+            ["Yoda", "images/yoda.png"],
+            ["Young lady", "images/g2.png"],
+            ["Duet", "images/music.png"],
+            ["Boy with blue eyes", "images/b2.png"],
+            ["Smart dog", "images/dog.png"],
+            ["Young girl", "images/g3.png"],
+            ["Happy friends", "images/m1.png"],
+            ["Happy girl", "images/m2.png"],
+            ["Cleopatra", "images/g1.png"],
+            ["Young boy with flowers", "images/b1.png"],
+            ["Bosch style maze", "images/hz.png"]
+        ];
+        /* activeIndex is State Variable*/
+        const Slideshow = () => {
+            const [activeIndex, setActiveIndex] = React.useState(0);
+
+            /* handleThumbnailClick is Callback Function/ Event Handler*/
+            const handleThumbnailClick = (index) => {
+                /* another Event Handler: updates the activeIndex state variable with the clicked image's index, effectively changing the displayed image.*/
+                setActiveIndex(index);
+            };
+
+            return (
+                <div>
+                    {/* Main Image */}
+                    <div className="slideshow-window">
+                        <img
+                            src={imgOptions[activeIndex][1]}
+                            alt={imgOptions[activeIndex][0]}
+                            style={{ width: "100%", height: "auto" }}
+                        />
+                        <h2>{imgOptions[activeIndex][0]}</h2>
+                    </div>
+
+                    {/* Thumbnails */}
+                    <div className="thumbnail-container">
+                        {imgOptions.map((img, index) => (
+                            <div
+                                key={index}
+                                style={{
+                                    margin: "0 10px",
+                                    cursor: "pointer",
+                                    border: activeIndex === index ? "2px solid blue" : "2px solid transparent"
+                                }}
+                                onClick={() => handleThumbnailClick(index)}
+                            >
+                                <img src={img[1]} alt={img[0]} style={{ width: "100px", height: "auto" }} />
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            );
+        };
+        /* 
+        The ReactDOM.render() method mounts the Slideshow component to the #root div
+        */
+        ReactDOM.render(<Slideshow />, document.getElementById('root'));
+    </script>
 </body>
 </html>
